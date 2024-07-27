@@ -24,7 +24,14 @@ app.use(cors());
 app.use(express.json());
 
 // Middleware to check API key
-
+app.use((req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  if (apiKey && apiKey === API_KEY) {
+    next(); // Proceed to the next middleware or route handler
+  } else {
+    res.status(403).send({ error: 'Forbidden - Invalid API key' });
+  }
+});
 
 // Configure multer for normal image file uploads
 const storage = multer.diskStorage({
